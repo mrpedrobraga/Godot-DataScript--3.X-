@@ -54,7 +54,10 @@ func execute(block, _context: ExecutionContext = null):
 	# by checking if the first element is an array
 	# or is the string ()
 	if not (block[0] is Array or (block[0] is String and block[0] == "()")):
-		return _execute_instruction(block, _context)
+		var result = _execute_instruction(block, _context)
+		if result is GDScriptFunctionState:
+			result = yield(result, "completed")
+		return result
 
 	# From here on, `routine` is treated as an expression block,
 	# that is, an Array of instructions.
@@ -102,7 +105,7 @@ func _execute_instruction(instruction, _context: ExecutionContext):
 				var param_eval_result = execute(param)
 				if param_eval_result is GDScriptFunctionState:
 					param_eval_result = yield(param_eval_result, "completed")
-					i_evaluated_params.push_back(param_eval_result)
+				i_evaluated_params.push_back(param_eval_result)
 		# Meta functions won't pre-evaluate their parameters,
 		# so you'll need to call "execute" from inside them.
 		else:
