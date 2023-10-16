@@ -1,7 +1,7 @@
 extends DataScriptRuntime
 
 func _ready():
-	var routine = load_routine_from_json("res://test/tester_routine.json")
+	var routine = load_routine_from_json("res://test/tester_routine.ds.json")
 
 	meta_functions = ["if", "else"]
 
